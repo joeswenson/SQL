@@ -1,0 +1,120 @@
+CREATE TABLE employees (
+name TEXT
+, id INT PRIMARY KEY
+, hire_year INT
+, department TEXT
+, salary INT
+, city TEXT
+);
+
+CREATE TABLE departments (
+department TEXT PRIMARY KEY
+, department_head TEXT
+, department_email TEXT
+, department_code INT
+);
+
+CREATE TABLE modules (
+employee_id INT
+, modules_assigned INT
+, modules_completed INT
+);
+
+CREATE TABLE potluck_dishes (
+employee_id INT
+, category TEXT
+, dish TEXT
+);
+
+INSERT INTO employees VALUES
+('Brian Hernandez', 290308, 2021, 'accounting', 84500, 'Novi')
+, ('Tamara Hobbs', 250199, 2014, 'management', 112000, 'Lansing')
+, ('Chloe Kim', 305204, 2018, 'marketing', 75000, 'Okemos')
+, ('Priya Shepherd', 195074, 2022,  'IT', 82000, 'Mason')
+, ('Jesse Wright', 305427, 2017, 'marketing', 62000, 'Lansing')
+;
+
+INSERT INTO departments VALUES
+('accounting', 'Wendy Diaz', 'accounting@tech517.com', 290)
+, ('administration', 'Richard Nguyen', 'admin@tech517.com', 175)
+, ('customer service', 'May Schuster', 'help@tech517.com', 210)
+, ('engineering', 'Keisha Hughes', 'development@tech517.com', 105)
+, ('human resources', 'Isaac Lewis', 'hr@tech517.com', 130)
+, ('IT', 'Christina Young', 'IT@tech517.com', 195)
+, ('management', 'Adjoa Carter', 'leadership@tech517.com', 250)
+, ('marketing', 'Li-Kuo Chen', 'marketing@tech517.com', 305)
+;
+
+INSERT INTO modules VALUES
+(290308, 14, 7)
+, (250199, 14, 12)
+, (305204, 16, 10)
+, (195074, 16, 15)
+, (305427, 20, 17)
+;
+
+
+INSERT INTO potluck_dishes VALUES
+(290308, 'side', NULL)
+, (250199, 'main', 'lasagna')
+, (305204, 'dessert', 'key lime pie')
+, (195074, 'side', 'mac n cheese')
+, (305427, 'side', 'caesar salad')
+;
+
+-- to practice SELF JOINs, let's add the table below, which tracks a gift exchange. 
+CREATE TABLE gifts (
+giver_id INTEGER PRIMARY KEY
+, name TEXT
+, rec_id INTEGER);
+
+INSERT INTO gifts VALUES
+(1, 'Brian', 3)
+, (2, 'Tamara', 5)
+, (3, 'Chloe', 2)
+, (4, 'Priya', 1)
+, (5, 'Jesse', 4);
+
+SELECT*
+FROM vips
+LIMIT 5;
+
+-- 1. Which vips member id's have a welcome rsvp, dinner rsvp or both?  [LEFT JOIN]
+
+SELECT vips.member_id,reservations.welcome_rsvp,reservations.dinner_rsvp
+FROM vips
+LEFT JOIN reservations
+ON vips.member_id = reservations.member_id
+;
+
+-- 2.What event types are the vips attending? [INNER JOIN]
+
+SELECT vips.first_name,vips.last_name,vips.event,events.event_name,events.event_type
+FROM vips
+INNER JOIN events
+ON vips.event=events.event_id
+ORDER BY event
+;
+
+--3.What hotel are the members staying at? [Multiple JOINs]
+SELECT vips.first_name, vips.last_name, reservations.hotel, hotels.hotel_name
+FROM vips
+LEFT JOIN reservations
+  ON vips.member_id = reservations.member_id
+LEFT JOIN hotels
+  ON reservations.hotel = hotels.hotel_id;
+
+--4. Show all the information for those who attended event 4,5 or 6.[Sub Query}
+SELECT *
+FROM vips
+WHERE event IN (4,5,6);
+
+--5. Show all events with a Panel or Workshop type 
+SELECT *
+FROM events
+WHERE event_type IN ('Panel','Workshop');
+
+--6. Show all vips first and last names in order of oldest to newest membership.
+SELECT first_name,last_name,member_since
+FROM vips
+ORDER BY member_since;
